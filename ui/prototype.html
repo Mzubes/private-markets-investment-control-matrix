@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Markets Investment Control Matrix - UI Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .top-bar {
+            background: #1a1a1a;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .fund-selector {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-box {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background: #2a2a2a;
+            color: white;
+            width: 300px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .nav-tabs {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            padding: 0 2rem;
+            gap: 2rem;
+        }
+
+        .nav-tabs button {
+            background: none;
+            border: none;
+            padding: 1rem 0;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs button.active {
+            color: #0066cc;
+            border-bottom-color: #0066cc;
+        }
+
+        .nav-tabs button:hover {
+            color: #333;
+        }
+
+        /* Dashboard Screen */
+        .dashboard {
+            flex-direction: column;
+            background: #f5f5f5;
+        }
+
+        .exception-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            padding: 2rem;
+            background: white;
+            margin: 1rem 2rem 0;
+            border-radius: 8px;
+        }
+
+        .card {
+            background: white;
+            border-left: 4px solid;
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card.high {
+            border-left-color: #dc3545;
+        }
+
+        .card.medium {
+            border-left-color: #ff9800;
+        }
+
+        .card.low {
+            border-left-color: #4caf50;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .exception-table {
+            background: white;
+            margin: 1rem 2rem 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f0f0f0;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .severity-badge.high {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .severity-badge.medium {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .severity-badge.low {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.unreviewed {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-badge.approved {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge.rejected {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .action-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #0052a3;
+        }
+
+        /* Exception Review Screen */
+        .exception-review {
+            flex-direction: column;
+        }
+
+        .exception-review-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.75rem;
+        }
+
+        .variance-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .variance-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .variance-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .variance-diff {
+            font-size: 0.9rem;
+            color: #dc3545;
+            margin-top: 0.25rem;
+        }
+
+        .document-viewer-mock {
+            background: #f9f9f9;
+            border: 2px dashed #ddd;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .action-btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+            text-align: left;
+        }
+
+        .action-btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Document Viewer Screen */
+        .document-viewer {
+            flex-direction: column;
+        }
+
+        .document-viewer-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            height: calc(100vh - 150px);
+        }
+
+        .pdf-viewer {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .pdf-mock {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .extraction-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .extraction-field {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .field-label {
+            font-size: 0.75rem;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .field-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-score {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Reconciliation Screen */
+        .reconciliation {
+            flex-direction: column;
+        }
+
+        .reconciliation-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .variance-table {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .chart-placeholder {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            color: #999;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        /* LPA Modeling Screen */
+        .lpa-modeling {
+            flex-direction: column;
+        }
+
+        .lpa-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .clause-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .clause-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .clause-item:hover {
+            background: #f9f9f9;
+        }
+
+        .clause-item.active {
+            background: #e3f2fd;
+            border-left: 3px solid #0066cc;
+        }
+
+        .clause-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* Approvals Screen */
+        .approvals {
+            flex-direction: column;
+        }
+
+        .approvals-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .task-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .task-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-meta {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .timeline {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 30px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: #ddd;
+        }
+
+        .timeline-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #0066cc;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .timeline-dot.completed {
+            background: #4caf50;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* Settings Screen */
+        .settings {
+            flex-direction: column;
+        }
+
+        .settings-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .settings-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.75rem;
+        }
+
+        .integration-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .integration-item:last-child {
+            border-bottom: none;
+        }
+
+        .integration-info {
+            flex: 1;
+        }
+
+        .integration-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .integration-status {
+            font-size: 0.85rem;
+        }
+
+        .status-connected {
+            color: #4caf50;
+        }
+
+        .status-disconnected {
+            color: #999;
+        }
+
+        .config-btn {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .config-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .config-btn.connected {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .config-btn.connected:hover {
+            background: #45a049;
+        }
+
+        .user-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 0.5fr;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .user-row:last-child {
+            border-bottom: none;
+        }
+
+        .role-select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <div class="logo">📊 PMICM</div>
+                <select class="fund-selector">
+                    <option>Fund: Tech Ventures III</option>
+                    <option>Fund: Growth Partners II</option>
+                    <option>Fund: Infra Asia I</option>
+                </select>
+                <input type="text" class="search-box" placeholder="Search exceptions...">
+            </div>
+            <div class="top-bar-right">
+                <span>👤 User</span>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="showScreen('dashboard')">Dashboard</button>
+            <button class="nav-btn" onclick="showScreen('exception-review')">Exception Review</button>
+            <button class="nav-btn" onclick="showScreen('document-viewer')">Document Viewer</button>
+            <button class="nav-btn" onclick="showScreen('lpa-modeling')">LPA Modeling</button>
+            <button class="nav-btn" onclick="showScreen('reconciliation')">Reconciliation</button>
+            <button class="nav-btn" onclick="showScreen('approvals')">Approvals</button>
+            <button class="nav-btn" onclick="showScreen('settings')">Settings</button>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard" class="screen active dashboard">
+            <div class="exception-cards">
+                <div class="card high">
+                    <div class="card-title">Capital Call Mismatches</div>
+                    <div class="card-value">12</div>
+                </div>
+                <div class="card medium">
+                    <div class="card-title">Distribution Variances</div>
+                    <div class="card-value">8</div>
+                </div>
+                <div class="card low">
+                    <div class="card-title">Fee Irregularities</div>
+                    <div class="card-value">3</div>
+                </div>
+                <div class="card medium">
+                    <div class="card-title">Missing Docs</div>
+                    <div class="card-value">5</div>
+                </div>
+            </div>
+
+            <div class="exception-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fund</th>
+                            <th>GP</th>
+                            <th>Type</th>
+                            <th>Severity</th>
+                            <th>Expected</th>
+                            <th>Actual</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tech Ventures III</td>
+                            <td>Accel Partners</td>
+                            <td>Capital Call</td>
+                            <td><span class="severity-badge high">HIGH</span></td>
+                            <td>$5,000,000</td>
+                            <td>$4,800,000</td>
+                            <td><span class="status-badge unreviewed">Unreviewed</span></td>
+                            <td><button class="action-btn" onclick="showScreen('exception-review')">Review</button></td>
+                        </tr>
+                        <tr>
+                            <td>Growth Partners II</td>
+                            <td>Insight Partners</td>
+                            <td>Distribution</td>
+                            <td><span class="severity-badge medium">MEDIUM</span></td>
+                            <td>$2,100,000</td>
+                            <td>$2,150,000</td>
+                            <td><span class="status-badge unreviewed">Unreviewed</span></td>
+                            <td><button class="action-btn" onclick="showScreen('exception-review')">Review</button></td>
+                        </tr>
+                        <tr>
+                            <td>Infra Asia I</td>
+                            <td>Brookfield</td>
+                            <td>Fee</td>
+                            <td><span class="severity-badge low">LOW</span></td>
+                            <td>$450,000</td>
+                            <td>$450,000</td>
+                            <td><span class="status-badge approved">Approved</span></td>
+                            <td><button class="action-btn">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Exception Review Screen -->
+        <div id="exception-review" class="screen exception-review">
+            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
+                <h2 style="margin-bottom: 0.5rem;">Exception Review</h2>
+                <p style="color: #666; font-size: 0.9rem;">Tech Ventures III • Accel Partners • Capital Call • ID: EXC-2024-0152</p>
+            </div>
+            <div class="exception-review-content">
+                <div class="panel">
+                    <div class="panel-title">Expected vs Actual</div>
+                    <div class="variance-item">
+                        <div class="variance-label">Expected Amount</div>
+                        <div class="variance-value">$5,000,000</div>
+                    </div>
+                    <div class="variance-item">
+                        <div class="variance-label">Actual Amount</div>
+                        <div class="variance-value">$4,800,000</div>
+                    </div>
+                    <div class="variance-item">
+                        <div class="variance-label">Variance</div>
+                        <div class="variance-value">-$200,000</div>
+                        <div class="variance-diff">-4.0%</div>
+                    </div>
+                    <button style="margin-top: 1rem; width: 100%;" class="action-btn">View LPA Terms</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Evidence</div>
+                    <div class="document-viewer-mock">📄 Capital Call Notice (PDF)</div>
+                    <div style="margin-top: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #0066cc;">
+                            <input type="checkbox"> Show extraction source
+                        </label>
+                    </div>
+                    <button style="width: 100%; margin-top: 0.75rem;" class="action-btn-secondary">📄 Compare to Last Call</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Actions</div>
+                    <div class="action-list">
+                        <button class="action-btn" style="background: #4caf50;">✓ Approve</button>
+                        <button class="action-btn" style="background: #dc3545;">✕ Reject</button>
+                        <button class="action-btn-secondary">❓ Request Clarification</button>
+                        <button class="action-btn-secondary">💬 Add Comment</button>
+                        <button class="action-btn-secondary">👥 Assign to Teammate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Viewer Screen -->
+        <div id="document-viewer" class="screen document-viewer">
+            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
+                <h2>Document Viewer + Extraction</h2>
+            </div>
+            <div class="document-viewer-container">
+                <div class="pdf-viewer">
+                    <div class="pdf-mock">📄 PDF Document Viewer (with page thumbnails & zoom controls)</div>
+                </div>
+                <div class="extraction-sidebar">
+                    <div class="extraction-field">
+                        <div class="field-label">Capital Call Amount</div>
+                        <div class="field-value">$4,800,000</div>
+                        <span class="confidence-score">98% confidence</span>
+                    </div>
+                    <div class="extraction-field">
+                        <div class="field-label">Due Date</div>
+                        <div class="field-value">2024-09-15</div>
+                        <span class="confidence-score">99% confidence</span>
+                    </div>
+                    <div class="extraction-field">
+                        <div class="field-label">Bank Details</div>
+                        <div class="field-value">JP Morgan Chase</div>
+                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Acct: ****5432</div>
+                        <span class="confidence-score">95% confidence</span>
+                    </div>
+                    <div class="extraction-field">
+                        <div class="field-label">Fee Components</div>
+                        <div class="field-value">Management: 2%</div>
+                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Performance: 20%</div>
+                        <span class="confidence-score">97% confidence</span>
+                    </div>
+                    <div class="extraction-field">
+                        <div class="field-label">Commitment Remaining</div>
+                        <div class="field-value">$12,500,000</div>
+                        <span class="confidence-score">96% confidence</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LPA Modeling Screen -->
+        <div id="lpa-modeling" class="screen lpa-modeling">
+            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
+                <h2>LPA / Side Letter Canonicalization</h2>
+            </div>
+            <div class="lpa-content">
+                <div class="clause-list">
+                    <div class="clause-item active">
+                        <div class="clause-name">Capital Call Mechanics</div>
+                    </div>
+                    <div class="clause-item">
+                        <div class="clause-name">Fee Schedule</div>
+                    </div>
+                    <div class="clause-item">
+                        <div class="clause-name">Carry Waterfall</div>
+                    </div>
+                    <div class="clause-item">
+                        <div class="clause-name">Side Letter Waivers</div>
+                    </div>
+                    <div class="clause-item">
+                        <div class="clause-name">Commitment Adjustments</div>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin: 0;">
+                    <div class="panel-title">Clause Viewer</div>
+                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; font-family: monospace; font-size: 0.85rem; color: #666; line-height: 1.6;">
+                        "The GP may call capital from LPs on a pro-rata basis according to investment needs..."
+                    </div>
+                    <div style="background: #f0f8ff; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                        <strong style="color: #0066cc;">Structured Representation:</strong>
+                        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #333;">
+                            • Mechanism: Pro-rata capital call<br>
+                            • Frequency: On-demand<br>
+                            • Max per call: 50% of commitment
+                        </div>
+                    </div>
+                    <button style="width: 100%; margin-bottom: 0.5rem;" class="action-btn-secondary">Edit Structured Clause</button>
+                    <button style="width: 100%;" class="action-btn-secondary">Link to Evidence</button>
+                </div>
+
+                <div class="panel" style="margin: 0;">
+                    <div class="panel-title">Investor-Specific Modeling</div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">Select Investor:</label>
+                        <select style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem;">
+                            <option>All Investors</option>
+                            <option selected>Institutional Investor A</option>
+                            <option>Fund of Funds B</option>
+                            <option>Pension Fund C</option>
+                        </select>
+                    </div>
+                    <div style="background: #fffbea; padding: 1rem; border-radius: 4px;">
+                        <strong style="color: #e65100;">Side Letter Adjustments:</strong>
+                        <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #333;">
+                            • Fee Waiver: -0.5% (Reduced from 2%)<br>
+                            • Commit Reduction: $500K<br>
+                            • Expected Call: $4.5M
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reconciliation Screen -->
+        <div id="reconciliation" class="screen reconciliation">
+            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
+                <h2>Reconciliation - Variance Analysis</h2>
+            </div>
+            <div class="reconciliation-content">
+                <div class="variance-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>GP Value</th>
+                                <th>Expected Value</th>
+                                <th>Allocator Value</th>
+                                <th>Variance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Capital Committed</td>
+                                <td>$50,000,000</td>
+                                <td>$50,000,000</td>
+                                <td>$50,000,000</td>
+                                <td>$0</td>
+                                <td><span class="status-badge approved">Match</span></td>
+                            </tr>
+                            <tr>
+                                <td>Capital Called</td>
+                                <td>$24,800,000</td>
+                                <td>$25,000,000</td>
+                                <td>$24,800,000</td>
+                                <td>-$200,000</td>
+                                <td><span class="status-badge unreviewed">Flagged</span></td>
+                            </tr>
+                            <tr>
+                                <td>Distributions</td>
+                                <td>$8,150,000</td>
+                                <td>$8,100,000</td>
+                                <td>$8,100,000</td>
+                                <td>$50,000</td>
+                                <td><span class="status-badge unreviewed">Flagged</span></td>
+                            </tr>
+                            <tr>
+                                <td>Fee Accrual (YTD)</td>
+                                <td>$1,000,000</td>
+                                <td>$1,000,000</td>
+                                <td>$975,000</td>
+                                <td>-$25,000</td>
+                                <td><span class="status-badge unreviewed">Flagged</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-placeholder">
+                        <div class="chart-title">📈 Variance Over Time</div>
+                        <div style="color: #ccc; margin-top: 0.5rem;">[Line Chart]</div>
+                    </div>
+                    <div class="chart-placeholder">
+                        <div class="chart-title">💰 Commitment Remaining</div>
+                        <div style="color: #ccc; margin-top: 0.5rem;">[Gauge Chart]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approvals Screen -->
+        <div id="approvals" class="screen approvals">
+            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
+                <h2>Approval Workflow</h2>
+            </div>
+            <div class="approvals-content">
+                <div class="task-list">
+                    <div class="panel-title" style="margin: 1rem; border: none; padding: 0;">Pending Reviews</div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">EXC-2024-0152</div>
+                            <div class="task-meta">Tech Ventures III • Assigned to: John Smith • Due: Sep 20</div>
+                        </div>
+                        <span class="severity-badge high">HIGH</span>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">EXC-2024-0151</div>
+                            <div class="task-meta">Growth Partners II • Assigned to: Sarah Chen • Due: Sep 19</div>
+                        </div>
+                        <span class="severity-badge medium">MED</span>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">EXC-2024-0150</div>
+                            <div class="task-meta">Infra Asia I • Assigned to: Mike Johnson • Due: Sep 18</div>
+                        </div>
+                        <span class="severity-badge low">LOW</span>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <div class="panel-title">Workflow Timeline</div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot completed"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Extracted</div>
+                            <div class="timeline-time">Sep 10, 2024 • 10:30 AM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot completed"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Flagged</div>
+                            <div class="timeline-time">Sep 10, 2024 • 11:15 AM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot completed"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">In Review</div>
+                            <div class="timeline-time">Sep 12, 2024 • 2:00 PM (John Smith)</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Awaiting Approval</div>
+                            <div class="timeline-time">Pending...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settings" class="screen settings">
+            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
+                <h2>Settings & Integrations</h2>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <div class="settings-title">🔗 Integrations</div>
+                    <div class="integration-item">
+                        <div class="integration-info">
+                            <div class="integration-name">Allvue</div>
+                            <div class="integration-status status-connected">✓ Connected</div>
+                        </div>
+                        <button class="config-btn connected">Configured</button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="integration-info">
+                            <div class="integration-name">Juniper Square</div>
+                            <div class="integration-status status-connected">✓ Connected</div>
+                        </div>
+                        <button class="config-btn connected">Configured</button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="integration-info">
+                            <div class="integration-name">QuickBooks</div>
+                            <div class="integration-status status-disconnected">Not Connected</div>
+                        </div>
+                        <button class="config-btn">Configure</button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="integration-info">
+                            <div class="integration-name">Sage</div>
+                            <div class="integration-status status-disconnected">Not Connected</div>
+                        </div>
+                        <button class="config-btn">Configure</button>
+                    </div>
+                    <div class="integration-item">
+                        <div class="integration-info">
+                            <div class="integration-name">Snowflake</div>
+                            <div class="integration-status status-connected">✓ Connected</div>
+                        </div>
+                        <button class="config-btn connected">Configured</button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">🔐 API & Security</div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <button class="action-btn" style="margin-right: 0.5rem;">+ Create API Key</button>
+                        <button class="action-btn-secondary" style="display: inline-block; margin-left: 0.5rem;">Manage Keys</button>
+                    </div>
+                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                        <strong style="display: block; margin-bottom: 0.5rem; color: #333;">Webhook Endpoints</strong>
+                        <div style="font-size: 0.85rem; color: #666; font-family: monospace;">https://api.example.com/webhooks</div>
+                    </div>
+                    <button class="action-btn-secondary" style="width: 100%;">View Audit Logs</button>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">👥 User Management</div>
+                    <button class="action-btn" style="margin-bottom: 1rem;">+ Invite User</button>
+                    <div class="user-row">
+                        <div><strong>Email</strong></div>
+                        <div><strong>Name</strong></div>
+                        <div><strong>Role</strong></div>
+                        <div></div>
+                    </div>
+                    <div class="user-row">
+                        <div>john.smith@example.com</div>
+                        <div>John Smith</div>
+                        <div>
+                            <select class="role-select">
+                                <option>Admin</option>
+                                <option selected>Reviewer</option>
+                                <option>Viewer</option>
+                            </select>
+                        </div>
+                        <div>✕</div>
+                    </div>
+                    <div class="user-row">
+                        <div>sarah.chen@example.com</div>
+                        <div>Sarah Chen</div>
+                        <div>
+                            <select class="role-select">
+                                <option>Admin</option>
+                                <option selected>Reviewer</option>
+                                <option>Viewer</option>
+                            </select>
+                        </div>
+                        <div>✕</div>
+                    </div>
+                    <div class="user-row">
+                        <div>mike.johnson@example.com</div>
+                        <div>Mike Johnson</div>
+                        <div>
+                            <select class="role-select">
+                                <option selected>Admin</option>
+                                <option>Reviewer</option>
+                                <option>Viewer</option>
+                            </select>
+                        </div>
+                        <div>✕</div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">🔒 SSO Configuration</div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" checked> Enable SAML 2.0
+                        </label>
+                    </div>
+                    <button class="action-btn-secondary" style="width: 100%;">Configure SAML Metadata</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Remove active state from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+
+            // Add active state to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
