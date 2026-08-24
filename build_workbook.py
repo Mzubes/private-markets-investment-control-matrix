@@ -1,171 +1,202 @@
+# build_workbook.py
+# Requirements: pandas, openpyxl
+# Install: pip install pandas openpyxl
+
 import pandas as pd
-from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-from openpyxl.utils.dataframe import dataframe_to_rows
+from pathlib import Path
 
-def create_competitive_matrix_workbook():
-    """
-    Reads matrix.csv and builds a clean Excel workbook with multiple sheets.
-    Outputs: PrivateMarkets_InvestmentControl_CompetitiveMatrix.xlsx
-    """
-    
-    # Read the CSV file
-    df = pd.read_csv('matrix.csv')
-    
-    # Create a new workbook
-    wb = Workbook()
-    wb.remove(wb.active)  # Remove default sheet
-    
-    # Define styles
-    header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-    header_font = Font(bold=True, color="FFFFFF", size=11)
-    category_fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
-    category_font = Font(bold=True, size=10)
-    border = Border(
-        left=Side(style='thin'),
-        right=Side(style='thin'),
-        top=Side(style='thin'),
-        bottom=Side(style='thin')
-    )
-    center_alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
-    left_alignment = Alignment(horizontal='left', vertical='top', wrap_text=True)
-    
-    # Sheet 1: Full Matrix
-    ws_full = wb.create_sheet("Full Matrix", 0)
-    for r_idx, row in enumerate(dataframe_to_rows(df, index=False, header=True), 1):
-        for c_idx, value in enumerate(row, 1):
-            cell = ws_full.cell(row=r_idx, column=c_idx, value=value)
-            if r_idx == 1:  # Header row
-                cell.fill = header_fill
-                cell.font = header_font
-                cell.alignment = center_alignment
-            else:
-                cell.alignment = left_alignment
-            cell.border = border
-    
-    # Adjust column widths for Full Matrix
-    ws_full.column_dimensions['A'].width = 18
-    ws_full.column_dimensions['B'].width = 12
-    ws_full.column_dimensions['C'].width = 18
-    ws_full.column_dimensions['D'].width = 20
-    ws_full.column_dimensions['E'].width = 25
-    for col in range(6, len(df.columns) + 1):
-        ws_full.column_dimensions[chr(64 + col) if col <= 26 else chr(64 + col // 26) + chr(64 + col % 26)].width = 14
-    
-    # Sheet 2: Company Overview
-    ws_overview = wb.create_sheet("Company Overview", 1)
-    overview_cols = ['Company', 'Founded', 'Funding if known', 'Primary customer', 'Core product']
-    overview_df = df[overview_cols].copy()
-    
-    for r_idx, row in enumerate(dataframe_to_rows(overview_df, index=False, header=True), 1):
-        for c_idx, value in enumerate(row, 1):
-            cell = ws_overview.cell(row=r_idx, column=c_idx, value=value)
-            if r_idx == 1:  # Header row
-                cell.fill = header_fill
-                cell.font = header_font
-                cell.alignment = center_alignment
-            else:
-                cell.alignment = left_alignment
-            cell.border = border
-    
-    ws_overview.column_dimensions['A'].width = 20
-    ws_overview.column_dimensions['B'].width = 12
-    ws_overview.column_dimensions['C'].width = 20
-    ws_overview.column_dimensions['D'].width = 25
-    ws_overview.column_dimensions['E'].width = 30
-    
-    # Sheet 3: Data Capabilities
-    ws_data = wb.create_sheet("Data Capabilities", 2)
-    data_cols = ['Company', 'Document collection', 'Document extraction', 'LPA extraction', 
-                 'Side-letter extraction', 'Investor-specific term modeling']
-    data_df = df[data_cols].copy()
-    
-    for r_idx, row in enumerate(dataframe_to_rows(data_df, index=False, header=True), 1):
-        for c_idx, value in enumerate(row, 1):
-            cell = ws_data.cell(row=r_idx, column=c_idx, value=value)
-            if r_idx == 1:  # Header row
-                cell.fill = header_fill
-                cell.font = header_font
-                cell.alignment = center_alignment
-            else:
-                cell.alignment = left_alignment
-            cell.border = border
-    
-    ws_data.column_dimensions['A'].width = 20
-    for col in range(2, 7):
-        ws_data.column_dimensions[chr(64 + col)].width = 16
-    
-    # Sheet 4: Workflow & Automation
-    ws_workflow = wb.create_sheet("Workflow & Automation", 3)
-    workflow_cols = ['Company', 'Capital-call extraction', 'Capital-call validation', 
-                     'Distribution validation', 'Fee verification', 'Carry verification', 
-                     'Expense verification', 'Human approval workflows', 'Downstream execution']
-    workflow_df = df[workflow_cols].copy()
-    
-    for r_idx, row in enumerate(dataframe_to_rows(workflow_df, index=False, header=True), 1):
-        for c_idx, value in enumerate(row, 1):
-            cell = ws_workflow.cell(row=r_idx, column=c_idx, value=value)
-            if r_idx == 1:  # Header row
-                cell.fill = header_fill
-                cell.font = header_font
-                cell.alignment = center_alignment
-            else:
-                cell.alignment = left_alignment
-            cell.border = border
-    
-    ws_workflow.column_dimensions['A'].width = 20
-    for col in range(2, 10):
-        ws_workflow.column_dimensions[chr(64 + col)].width = 15
-    
-    # Sheet 5: Reconciliation & Monitoring
-    ws_recon = wb.create_sheet("Reconciliation & Monitoring", 4)
-    recon_cols = ['Company', 'NAV reconciliation', 'Cash-flow reconciliation', 
-                  'Expected-vs-actual calculations', 'Exception detection', 
-                  'Exception investigation', 'Portfolio monitoring', 
-                  'Underwriting-vs-actual monitoring']
-    recon_df = df[recon_cols].copy()
-    
-    for r_idx, row in enumerate(dataframe_to_rows(recon_df, index=False, header=True), 1):
-        for c_idx, value in enumerate(row, 1):
-            cell = ws_recon.cell(row=r_idx, column=c_idx, value=value)
-            if r_idx == 1:  # Header row
-                cell.fill = header_fill
-                cell.font = header_font
-                cell.alignment = center_alignment
-            else:
-                cell.alignment = left_alignment
-            cell.border = border
-    
-    ws_recon.column_dimensions['A'].width = 20
-    for col in range(2, 9):
-        ws_recon.column_dimensions[chr(64 + col)].width = 18
-    
-    # Sheet 6: Integration & Support
-    ws_integration = wb.create_sheet("Integration & Support", 5)
-    integration_cols = ['Company', 'Accounting integrations', 'Portfolio-system integrations', 
-                        'API availability', 'Audit trail', 'Evidence/provenance', 
-                        'Pre-investment functionality', 'Post-investment functionality',
-                        'Customer/VPC deployment', 'Known pricing', 'Notable customers']
-    integration_df = df[integration_cols].copy()
-    
-    for r_idx, row in enumerate(dataframe_to_rows(integration_df, index=False, header=True), 1):
-        for c_idx, value in enumerate(row, 1):
-            cell = ws_integration.cell(row=r_idx, column=c_idx, value=value)
-            if r_idx == 1:  # Header row
-                cell.fill = header_fill
-                cell.font = header_font
-                cell.alignment = center_alignment
-            else:
-                cell.alignment = left_alignment
-            cell.border = border
-    
-    ws_integration.column_dimensions['A'].width = 20
-    for col in range(2, 12):
-        ws_integration.column_dimensions[chr(64 + col)].width = 16
-    
-    # Save the workbook
-    wb.save('PrivateMarkets_InvestmentControl_CompetitiveMatrix.xlsx')
-    print("Workbook created successfully: PrivateMarkets_InvestmentControl_CompetitiveMatrix.xlsx")
+# Input CSV file
+CSV_FILE = Path("matrix.csv")
 
-if __name__ == "__main__":
-    create_competitive_matrix_workbook()
+# Output Excel file
+OUTFILE = Path("PrivateMarkets_InvestmentControl_CompetitiveMatrix.xlsx")
+
+# ---------- Load Competitive Matrix ----------
+df_matrix = pd.read_csv(CSV_FILE, dtype=str)
+
+# ---------- Sheet 2: Deep Dives ----------
+deep_dives = [
+    {
+        "Vendor": "Canoe Intelligence",
+        "A Extract": "YES - numeric and clause extraction from LP/GP docs",
+        "B Validate": "PARTIAL - provenance and mismatch flags",
+        "C Expected": "PARTIAL - no public evidence of full LPA modeling",
+        "D Reconcile": "PARTIAL - dashboards show mismatches",
+        "E Investigate": "PARTIAL - provenance links for manual review",
+        "F Recommend": "PARTIAL - suggested actions in marketing",
+        "G Execute": "PARTIAL - API pushes; no automated remediation shown",
+        "Source": "https://canoeintelligence.com/product"
+    },
+    {
+        "Vendor": "Juniper Square",
+        "A Extract": "YES - call notices and allocations",
+        "B Validate": "PARTIAL - rule checks, manual approvals",
+        "C Expected": "NO - no automated LPA parsing",
+        "D Reconcile": "PARTIAL - reconciliation features",
+        "E Investigate": "NO - manual workflows",
+        "F Recommend": "NO",
+        "G Execute": "YES - payment and accounting integrations",
+        "Source": "https://www.junipersquare.com/product"
+    },
+    {
+        "Vendor": "Chronograph",
+        "A Extract": "YES - call notice extraction",
+        "B Validate": "YES - automated validation",
+        "C Expected": "PARTIAL - limited modeling",
+        "D Reconcile": "PARTIAL",
+        "E Investigate": "PARTIAL",
+        "F Recommend": "NO",
+        "G Execute": "NO",
+        "Source": "https://www.chronograph.io"
+    },
+    {
+        "Vendor": "Allvue",
+        "A Extract": "YES",
+        "B Validate": "YES",
+        "C Expected": "PARTIAL",
+        "D Reconcile": "YES",
+        "E Investigate": "PARTIAL",
+        "F Recommend": "PARTIAL",
+        "G Execute": "YES",
+        "Source": "https://www.allvuesystems.com/solutions"
+    },
+    {
+        "Vendor": "eFront",
+        "A Extract": "YES",
+        "B Validate": "YES",
+        "C Expected": "PARTIAL",
+        "D Reconcile": "YES",
+        "E Investigate": "PARTIAL",
+        "F Recommend": "PARTIAL",
+        "G Execute": "YES",
+        "Source": "https://www.blackrock.com/solutions/efront"
+    },
+    {
+        "Vendor": "iLEVEL",
+        "A Extract": "YES",
+        "B Validate": "PARTIAL",
+        "C Expected": "NO",
+        "D Reconcile": "PARTIAL",
+        "E Investigate": "PARTIAL",
+        "F Recommend": "NO",
+        "G Execute": "YES",
+        "Source": "https://www.spglobal.com/marketintelligence/en/solutions/ilevel"
+    },
+    {
+        "Vendor": "Dynamo",
+        "A Extract": "YES",
+        "B Validate": "PARTIAL",
+        "C Expected": "NO",
+        "D Reconcile": "PARTIAL",
+        "E Investigate": "PARTIAL",
+        "F Recommend": "NO",
+        "G Execute": "YES",
+        "Source": "https://www.dynamo.com/product"
+    },
+    {
+        "Vendor": "Alkymi",
+        "A Extract": "YES",
+        "B Validate": "PARTIAL",
+        "C Expected": "NO",
+        "D Reconcile": "NO",
+        "E Investigate": "PARTIAL",
+        "F Recommend": "NO",
+        "G Execute": "NO",
+        "Source": "https://www.alkymi.io/solutions"
+    },
+    {
+        "Vendor": "Ontra",
+        "A Extract": "PARTIAL",
+        "B Validate": "NO",
+        "C Expected": "NO",
+        "D Reconcile": "NO",
+        "E Investigate": "NO",
+        "F Recommend": "NO",
+        "G Execute": "NO",
+        "Source": "https://www.ontra.io/product"
+    },
+    {
+        "Vendor": "DiligenceVault",
+        "A Extract": "YES",
+        "B Validate": "NO",
+        "C Expected": "NO",
+        "D Reconcile": "NO",
+        "E Investigate": "NO",
+        "F Recommend": "NO",
+        "G Execute": "NO",
+        "Source": "https://www.diligencevault.com/product"
+    }
+]
+
+df_deep = pd.DataFrame(deep_dives)
+
+# ---------- Sheet 3: Sources ----------
+sources = [
+    ("Canoe Intelligence", "https://canoeintelligence.com/product"),
+    ("Juniper Square", "https://www.junipersquare.com/product"),
+    ("Chronograph", "https://www.chronograph.io"),
+    ("Allvue", "https://www.allvuesystems.com/solutions"),
+    ("eFront", "https://www.blackrock.com/solutions/efront"),
+    ("iLEVEL", "https://www.spglobal.com/marketintelligence/en/solutions/ilevel"),
+    ("Dynamo", "https://www.dynamo.com/product"),
+    ("Alkymi", "https://www.alkymi.io/solutions"),
+    ("Ontra", "https://www.ontra.io/product"),
+    ("DiligenceVault", "https://www.diligencevault.com/product"),
+    ("Addepar", "https://www.addepar.com/product"),
+    ("SS&C", "https://www.ssctech.com/solutions/fund-administration"),
+    ("State Street", "https://www.statestreet.com/solutions/fund-services.html"),
+    ("BNY Mellon", "https://www.bnymellon.com/us/en/what-we-do/investment-services/fund-services.jsp")
+]
+
+df_sources = pd.DataFrame(sources, columns=["Vendor", "URL"])
+
+# ---------- Sheet 4: Verdict ----------
+df_verdict = pd.DataFrame({
+    "Question": [
+        "Does this wedge represent meaningful whitespace?",
+        "Single closest competitor?",
+        "Most dangerous incumbent?",
+        "Strongest initial customer segment?",
+        "Strongest initial workflow?",
+        "Would fund an MVP?"
+    ],
+    "Answer": [
+        "Yes — end-to-end LPA+side-letter canonicalization + continuous expected-state evaluation is not publicly offered.",
+        "Canoe Intelligence",
+        "Allvue / eFront",
+        "Family offices, endowments, OCIOs",
+        "Capital-call verification + remaining-commitment reconciliation",
+        "Yes, with a narrow MVP"
+    ]
+})
+
+# ---------- Sheet 5: Scoring ----------
+df_scoring = pd.DataFrame({
+    "Category": [
+        "Customer pain", "Competitive whitespace", "Technical feasibility",
+        "Willingness to pay", "Go-to-market feasibility", "Defensibility",
+        "Expansion potential", "Incumbent risk"
+    ],
+    "Score out of": [15, 15, 15, 10, 10, 15, 10, 10],
+    "Score given": [12, 11, 11, 7, 6, 9, 8, 4]
+})
+
+# ---------- Sheet 6: Next Steps ----------
+df_next = pd.DataFrame([
+    ("Pilot scope", "Capital-call verification MVP for family offices and mid-sized endowments"),
+    ("Data acquisition", "Secure NDAs and redacted LPAs/side letters for training data"),
+    ("Integration plan", "Integrate with Allvue, Juniper Square, QuickBooks/Sage"),
+    ("Auditability", "Design immutable provenance + human-in-the-loop approvals"),
+    ("Pilot metrics", "Accuracy >95%, time saved, discrepancies detected, willingness to pay")
+], columns=["Step", "Detail"])
+
+# ---------- Write Excel Workbook ----------
+with pd.ExcelWriter(OUTFILE, engine="openpyxl") as writer:
+    df_matrix.to_excel(writer, sheet_name="Competitive Matrix", index=False)
+    df_deep.to_excel(writer, sheet_name="Deep Dives", index=False)
+    df_sources.to_excel(writer, sheet_name="Sources", index=False)
+    df_verdict.to_excel(writer, sheet_name="Verdict", index=False)
+    df_scoring.to_excel(writer, sheet_name="Scoring", index=False)
+    df_next.to_excel(writer, sheet_name="Next Steps", index=False)
+
+print(f"Workbook written to {OUTFILE.resolve()}")
