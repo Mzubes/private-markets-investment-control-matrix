@@ -1000,12 +1000,12 @@
                 </div>
                 <div class="charts-grid">
                     <div class="chart-placeholder">
-                        <div class="chart-title">📈 Variance Over Time</div>
-                        <div style="color: #ccc; margin-top: 0.5rem;">[Line Chart]</div>
+                        <div class="chart-title">Capital Call Distribution</div>
+                        <p style="margin-top: 1rem;">📊 Chart will display here</p>
                     </div>
                     <div class="chart-placeholder">
-                        <div class="chart-title">💰 Commitment Remaining</div>
-                        <div style="color: #ccc; margin-top: 0.5rem;">[Gauge Chart]</div>
+                        <div class="chart-title">Variance Trend</div>
+                        <p style="margin-top: 1rem;">📈 Chart will display here</p>
                     </div>
                 </div>
             </div>
@@ -1014,62 +1014,61 @@
         <!-- Approvals Screen -->
         <div id="approvals" class="screen approvals">
             <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #ddd;">
-                <h2>Approval Workflow</h2>
+                <h2>Approvals & Workflow</h2>
             </div>
             <div class="approvals-content">
                 <div class="task-list">
-                    <div class="panel-title" style="margin: 1rem; border: none; padding: 0;">Pending Reviews</div>
                     <div class="task-item">
                         <div class="task-info">
-                            <div class="task-title">EXC-2024-0152</div>
-                            <div class="task-meta">Tech Ventures III • Assigned to: John Smith • Due: Sep 20</div>
+                            <div class="task-title">Review EXC-2024-0152</div>
+                            <div class="task-meta">Assigned to: You • Due: Today</div>
                         </div>
-                        <span class="severity-badge high">HIGH</span>
+                        <button class="action-btn">Open</button>
                     </div>
                     <div class="task-item">
                         <div class="task-info">
-                            <div class="task-title">EXC-2024-0151</div>
-                            <div class="task-meta">Growth Partners II • Assigned to: Sarah Chen • Due: Sep 19</div>
+                            <div class="task-title">Reconcile Distribution Variance</div>
+                            <div class="task-meta">Assigned to: Sarah Chen • Due: Tomorrow</div>
                         </div>
-                        <span class="severity-badge medium">MED</span>
+                        <button class="action-btn-secondary">View</button>
                     </div>
                     <div class="task-item">
                         <div class="task-info">
-                            <div class="task-title">EXC-2024-0150</div>
-                            <div class="task-meta">Infra Asia I • Assigned to: Mike Johnson • Due: Sep 18</div>
+                            <div class="task-title">Verify Fee Accrual Calculations</div>
+                            <div class="task-meta">Assigned to: Michael Rodriguez • Due: 2 days</div>
                         </div>
-                        <span class="severity-badge low">LOW</span>
+                        <button class="action-btn-secondary">View</button>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">LPA Update Review</div>
+                            <div class="task-meta">Assigned to: You • Due: 3 days</div>
+                        </div>
+                        <button class="action-btn-secondary">View</button>
                     </div>
                 </div>
 
                 <div class="timeline">
-                    <div class="panel-title">Workflow Timeline</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; color: #333;">Recent Activity</div>
                     <div class="timeline-item">
                         <div class="timeline-dot completed"></div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Extracted</div>
-                            <div class="timeline-time">Sep 10, 2024 • 10:30 AM</div>
+                            <div class="timeline-title">EXC-2024-0142 Approved</div>
+                            <div class="timeline-time">by John Smith • 2 hours ago</div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot completed"></div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Flagged</div>
-                            <div class="timeline-time">Sep 10, 2024 • 11:15 AM</div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot completed"></div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">In Review</div>
-                            <div class="timeline-time">Sep 12, 2024 • 2:00 PM (John Smith)</div>
+                            <div class="timeline-title">Fund reconciliation completed</div>
+                            <div class="timeline-time">by Sarah Chen • 1 day ago</div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <div class="timeline-title">Awaiting Approval</div>
-                            <div class="timeline-time">Pending...</div>
+                            <div class="timeline-title">Pending review from Finance</div>
+                            <div class="timeline-time">since 3 days ago</div>
                         </div>
                     </div>
                 </div>
@@ -1083,112 +1082,52 @@
             </div>
             <div class="settings-content">
                 <div class="settings-section">
-                    <div class="settings-title">🔗 Integrations</div>
+                    <div class="settings-title">System Integrations</div>
                     <div class="integration-item">
                         <div class="integration-info">
-                            <div class="integration-name">Allvue</div>
-                            <div class="integration-status status-connected">✓ Connected</div>
+                            <div class="integration-name">Salesforce</div>
+                            <div class="integration-status"><span class="status-connected">✓ Connected</span></div>
                         </div>
                         <button class="config-btn connected">Configured</button>
                     </div>
                     <div class="integration-item">
                         <div class="integration-info">
-                            <div class="integration-name">Juniper Square</div>
-                            <div class="integration-status status-connected">✓ Connected</div>
+                            <div class="integration-name">Bloomberg Terminal</div>
+                            <div class="integration-status"><span class="status-connected">✓ Connected</span></div>
                         </div>
                         <button class="config-btn connected">Configured</button>
                     </div>
                     <div class="integration-item">
                         <div class="integration-info">
-                            <div class="integration-name">QuickBooks</div>
-                            <div class="integration-status status-disconnected">Not Connected</div>
+                            <div class="integration-name">Refinitiv</div>
+                            <div class="integration-status"><span class="status-disconnected">✗ Disconnected</span></div>
                         </div>
                         <button class="config-btn">Configure</button>
                     </div>
-                    <div class="integration-item">
-                        <div class="integration-info">
-                            <div class="integration-name">Sage</div>
-                            <div class="integration-status status-disconnected">Not Connected</div>
-                        </div>
-                        <button class="config-btn">Configure</button>
-                    </div>
-                    <div class="integration-item">
-                        <div class="integration-info">
-                            <div class="integration-name">Snowflake</div>
-                            <div class="integration-status status-connected">✓ Connected</div>
-                        </div>
-                        <button class="config-btn connected">Configured</button>
-                    </div>
                 </div>
 
                 <div class="settings-section">
-                    <div class="settings-title">🔐 API & Security</div>
-                    <div style="margin-bottom: 1.5rem;">
-                        <button class="action-btn" style="margin-right: 0.5rem;">+ Create API Key</button>
-                        <button class="action-btn-secondary" style="display: inline-block; margin-left: 0.5rem;">Manage Keys</button>
-                    </div>
-                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-                        <strong style="display: block; margin-bottom: 0.5rem; color: #333;">Webhook Endpoints</strong>
-                        <div style="font-size: 0.85rem; color: #666; font-family: monospace;">https://api.example.com/webhooks</div>
-                    </div>
-                    <button class="action-btn-secondary" style="width: 100%;">View Audit Logs</button>
-                </div>
-
-                <div class="settings-section">
-                    <div class="settings-title">👥 User Management</div>
-                    <button class="action-btn" style="margin-bottom: 1rem;">+ Invite User</button>
+                    <div class="settings-title">User Permissions</div>
                     <div class="user-row">
-                        <div><strong>Email</strong></div>
-                        <div><strong>Name</strong></div>
-                        <div><strong>Role</strong></div>
-                        <div></div>
+                        <div>john.smith@company.com</div>
+                        <div>Portfolio Manager</div>
+                        <div>Tech Ventures III</div>
+                        <select class="role-select">
+                            <option>Admin</option>
+                            <option selected>View</option>
+                            <option>Edit</option>
+                        </select>
                     </div>
                     <div class="user-row">
-                        <div>john.smith@example.com</div>
-                        <div>John Smith</div>
-                        <div>
-                            <select class="role-select">
-                                <option>Admin</option>
-                                <option selected>Reviewer</option>
-                                <option>Viewer</option>
-                            </select>
-                        </div>
-                        <div>✕</div>
+                        <div>sarah.chen@company.com</div>
+                        <div>Analyst</div>
+                        <div>All Funds</div>
+                        <select class="role-select">
+                            <option>Admin</option>
+                            <option>View</option>
+                            <option selected>Edit</option>
+                        </select>
                     </div>
-                    <div class="user-row">
-                        <div>sarah.chen@example.com</div>
-                        <div>Sarah Chen</div>
-                        <div>
-                            <select class="role-select">
-                                <option>Admin</option>
-                                <option selected>Reviewer</option>
-                                <option>Viewer</option>
-                            </select>
-                        </div>
-                        <div>✕</div>
-                    </div>
-                    <div class="user-row">
-                        <div>mike.johnson@example.com</div>
-                        <div>Mike Johnson</div>
-                        <div>
-                            <select class="role-select">
-                                <option selected>Admin</option>
-                                <option>Reviewer</option>
-                                <option>Viewer</option>
-                            </select>
-                        </div>
-                        <div>✕</div>
-                    </div>
-                </div>
-
-                <div class="settings-section">
-                    <div class="settings-title">🔒 SSO Configuration</div>
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            <input type="checkbox" checked> Enable SAML 2.0
-                        </label>
-                    </div>
-                    <button class="action-btn-secondary" style="width: 100%;">Configure SAML Metadata</button>
                 </div>
             </div>
         </div>
@@ -1197,19 +1136,17 @@
     <script>
         function showScreen(screenId) {
             // Hide all screens
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
 
-            // Remove active state from all nav buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            // Remove active class from all nav buttons
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => btn.classList.remove('active'));
 
             // Show selected screen
             document.getElementById(screenId).classList.add('active');
 
-            // Add active state to clicked button
+            // Add active class to corresponding nav button
             event.target.classList.add('active');
         }
     </script>
